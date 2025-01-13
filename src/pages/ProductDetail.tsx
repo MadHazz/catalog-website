@@ -1,10 +1,14 @@
-import { useParams } from 'react-router-dom';
-import { ShoppingCart, Package, Info, MapPin } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ShoppingCart, Package, Info, MapPin, Minus, Plus } from 'lucide-react';
 import { products } from '../data/products';
+import { useState } from 'react';
+import type { CartItem } from '../types';
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const product = products.find((p) => p.id === id);
+  const [quantity, setQuantity] = useState(1);
 
   if (!product) {
     return (
@@ -15,9 +19,41 @@ export default function ProductDetail() {
   }
 
   const handleAddToCart = () => {
-    // TODO: Implement cart functionality
-    console.log('Added to cart:', product);
+    const cartItem: CartItem = {
+      ...product,
+      selectedQuantity: quantity
+    };
+    
+    // Get existing cart items from localStorage
+    const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    // Check if item already exists in cart
+    const existingItemIndex = existingCart.findIndex((item: CartItem) => item.id === product.id);
+    
+    if (existingItemIndex >= 0) {
+      // Update quantity if item exists
+      existingCart[existingItemIndex].selectedQuantity += quantity;
+    } else {
+      // Add new item if it doesn't exist
+      existingCart.push(cartItem);
+    }
+    
+    // Save updated cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(existingCart));
+    
+    // Navigate to cart page
+    navigate('/cart');
   };
+
+  const decreaseQuantity = () => {
+    setQuantity((prev) => Math.max(1, prev - 1));
+  };
+
+  const increaseQuantity = () => {
+    setQuantity((prev) => Math.min(product.quantity, prev + 1));
+  };
+
+  const totalPrice = product.price * quantity;
 
   return (
     <div className="pt-20 px-4 max-w-7xl mx-auto">
@@ -26,7 +62,7 @@ export default function ProductDetail() {
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-[500px] object-cover rounded-lg"
+            className="w-full h-[500px] object-cover rounded-lg shadow-lg"
           />
         </div>
 
@@ -74,8 +110,8 @@ export default function ProductDetail() {
             </div>
           )}
 
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-gray-600">
+          <div className="mb-6">
+            <div className="text-sm text-gray-600 mb-2">
               Status:{' '}
               <span
                 className={`font-semibold ${
@@ -85,14 +121,40 @@ export default function ProductDetail() {
                 {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
               </span>
             </div>
+
             {product.quantity > 0 && (
-              <button
-                onClick={handleAddToCart}
-                className="flex-1 bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700 flex items-center justify-center gap-2"
-              >
-                <ShoppingCart className="h-5 w-5" />
-                Add to Cart
-              </button>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <label className="text-gray-700">Quantity:</label>
+                  <div className="flex items-center border rounded-md">
+                    <button
+                      onClick={decreaseQuantity}
+                      className="p-2 hover:bg-gray-100"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <span className="px-4 py-2 border-x">{quantity}</span>
+                    <button
+                      onClick={increaseQuantity}
+                      className="p-2 hover:bg-gray-100"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="text-lg font-semibold">
+                  Total: ${totalPrice.toFixed(2)}
+                </div>
+
+                <button
+                  onClick={handleAddToCart}
+                  className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700 flex items-center justify-center gap-2"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  Add to Cart
+                </button>
+              </div>
             )}
           </div>
         </div>
