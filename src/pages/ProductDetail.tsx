@@ -2,7 +2,22 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Package, Info, MapPin, Minus, Plus } from 'lucide-react';
 import { products } from '../data/products';
 import { useState } from 'react';
-import type { CartItem } from '../types';
+// import type { CartItem } from '../types';
+
+export interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  quantity: number;
+  image: string;
+  description: string;
+  weight: string;
+  origin?: string;
+  features: readonly string[];
+  ingredients?: string[];
+  selectedQuantity: number;
+}
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -21,7 +36,8 @@ export default function ProductDetail() {
   const handleAddToCart = () => {
     const cartItem: CartItem = {
       ...product,
-      selectedQuantity: quantity
+      selectedQuantity: quantity,
+      ingredients: product.ingredients ? [...product.ingredients] : undefined
     };
     
     // Get existing cart items from localStorage
@@ -44,7 +60,6 @@ export default function ProductDetail() {
     // Navigate to cart page
     navigate('/cart');
   };
-
   const decreaseQuantity = () => {
     setQuantity((prev) => Math.max(1, prev - 1));
   };
