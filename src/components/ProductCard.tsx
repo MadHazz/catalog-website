@@ -1,12 +1,13 @@
-import { Eye } from 'lucide-react';
+import { Eye, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { Product } from '../types';
 
 interface ProductCardProps {
   product: Product;
+  onAddToCart?: (product: Product) => void;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <Link to={`/product/${product.id}`}>
@@ -33,6 +34,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Eye className="h-5 w-5" />
           View Details
         </Link>
+        <button
+          onClick={() => onAddToCart?.(product)}
+          className="mt-2 w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 flex items-center justify-center gap-2"
+        >
+          <ShoppingCart className="h-5 w-5" />
+          Add to Cart
+        </button>
       </div>
     </div>
   );
