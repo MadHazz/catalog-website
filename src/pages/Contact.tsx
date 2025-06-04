@@ -1,9 +1,32 @@
 import { Mail, Phone, MessageSquare } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Contact() {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Implement form submission
+    const data = new FormData(e.currentTarget);
+    const name = data.get('name');
+    const email = data.get('email');
+    const message = data.get('message');
+
+    if (!name || !email || !message) {
+      setStatus('error');
+      return;
+    }
+
+    try {
+      const body = `${message}\n\nFrom: ${name} <${email}>`;
+      const mailto = `mailto:support@shophub.com?subject=${encodeURIComponent(
+        'Contact Form Submission'
+      )}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+      setStatus('success');
+    } catch (err) {
+      console.error(err);
+      setStatus('error');
+    }
   };
 
   return (
@@ -20,6 +43,7 @@ export default function Contact() {
               <input
                 type="text"
                 id="name"
+                name="name"
                 className="w-full p-2 border rounded-md"
                 required
               />
@@ -32,6 +56,7 @@ export default function Contact() {
               <input
                 type="email"
                 id="email"
+                name="email"
                 className="w-full p-2 border rounded-md"
                 required
               />
@@ -43,6 +68,7 @@ export default function Contact() {
               </label>
               <textarea
                 id="message"
+                name="message"
                 rows={4}
                 className="w-full p-2 border rounded-md"
                 required
@@ -55,6 +81,18 @@ export default function Contact() {
             >
               Send Message
             </button>
+            {status === 'success' && (
+              <p className="mt-4 text-green-600">
+                Your email client should now open. If it doesn't, please email
+                us directly.
+              </p>
+            )}
+            {status === 'error' && (
+              <p className="mt-4 text-red-600">
+                Something went wrong while preparing the message. Please try
+                again.
+              </p>
+            )}
           </form>
         </div>
 
