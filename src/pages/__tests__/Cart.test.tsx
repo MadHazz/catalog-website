@@ -35,4 +35,30 @@ describe('updateQuantity', () => {
     fireEvent.change(input, { target: { value: '10' } });
     expect((input as HTMLInputElement).value).toBe('5');
   });
+
+  it('accepts a quantity within the available stock range', () => {
+    const cartItem = {
+      id: '1',
+      name: 'Test',
+      price: 10,
+      category: 'cat',
+      quantity: 5,
+      image: '',
+      description: '',
+      features: [],
+      weight: '1kg',
+      selectedQuantity: 2,
+    };
+    localStorage.setItem('cart', JSON.stringify([cartItem]));
+    render(
+      <MemoryRouter>
+        <Cart />
+      </MemoryRouter>
+    );
+
+    const input = screen.getByRole('spinbutton');
+
+    fireEvent.change(input, { target: { value: '3' } });
+    expect((input as HTMLInputElement).value).toBe('3');
+  });
 });
