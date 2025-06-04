@@ -1,2 +1,2 @@
-# catalog-website
-catalog website template using bolt.new
+# Catalog-Website
+Catalog website template using Bolt.new
