@@ -2,22 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Package, Info, MapPin, Minus, Plus } from 'lucide-react';
 import { products } from '../data/products';
 import { useState } from 'react';
-// import type { CartItem } from '../types';
-
-export interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  quantity: number;
-  image: string;
-  description: string;
-  weight: string;
-  origin?: string;
-  features: readonly string[];
-  ingredients?: string[];
-  selectedQuantity: number;
-}
+import type { CartItem } from '../types';
 
 export default function ProductDetail() {
   const { id } = useParams();
