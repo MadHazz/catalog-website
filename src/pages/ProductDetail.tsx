@@ -39,16 +39,21 @@ export default function ProductDetail() {
       selectedQuantity: quantity,
       ingredients: product.ingredients ? [...product.ingredients] : undefined
     };
-    
+
     // Get existing cart items from localStorage
     const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    
+
     // Check if item already exists in cart
     const existingItemIndex = existingCart.findIndex((item: CartItem) => item.id === product.id);
-    
+
     if (existingItemIndex >= 0) {
-      // Update quantity if item exists
-      existingCart[existingItemIndex].selectedQuantity += quantity;
+      // Update quantity if item exists but cap at available stock
+      const existingItem = existingCart[existingItemIndex];
+      existingItem.selectedQuantity = Math.min(
+        existingItem.selectedQuantity + quantity,
+        existingItem.quantity
+      );
+      existingCart[existingItemIndex] = existingItem;
     } else {
       // Add new item if it doesn't exist
       existingCart.push(cartItem);
