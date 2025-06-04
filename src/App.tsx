@@ -6,6 +6,8 @@ import Cart from './pages/Cart';
 import Locations from './pages/Locations';
 import Contact from './pages/Contact';
 import ProductDetail from './pages/ProductDetail';
+import AdminLogin from './pages/admin/Login';
+import AdminSignup from './pages/admin/Signup';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/locations" element={<Locations />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/signup" element={<AdminSignup />} />
         </Routes>
       </div>
     </Router>
