@@ -22,7 +22,6 @@ export default function Navbar() {
             <Link to="/catalog" className="text-gray-600 hover:text-indigo-600">Browse Catalogs</Link>
             <Link to="/locations" className="text-gray-600 hover:text-indigo-600">Locations</Link>
             <Link to="/contact" className="text-gray-600 hover:text-indigo-600">Contact Us</Link>
-            <Link to="/admin/login" className="text-gray-600 hover:text-indigo-600">Admin</Link>
             <Link to="/cart" className="relative">
               <ShoppingCart className="h-6 w-6 text-gray-600 hover:text-indigo-600" />
             </Link>
@@ -75,13 +74,6 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
             >
               Contact Us
-            </Link>
-            <Link
-              to="/admin/login"
-              className="block px-3 py-2 text-gray-600 hover:text-indigo-600"
-              onClick={() => setIsOpen(false)}
-            >
-              Admin
             </Link>
             <Link
               to="/cart"
